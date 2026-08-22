@@ -12,16 +12,20 @@ import { ref , computed} from 'vue'
       {'id': 8, 'name': 'Produit H', 'unit_price': 50, 'quantity': 8, 'description': '<b>incroyable</b>'},
       {'id': 9, 'name': 'Produit I', 'unit_price': 40, 'quantity': 5, 'description': '<b>super</b>'},
       {'id': 10, 'name': 'Produit J', 'unit_price': 80, 'quantity': 5, 'description': '<u>génial</u>'},
-    ])
+    ]);
   
-
+    const productsLength = computed(() => products.value.length);
+    const cheapestPrice = computed(() => Math.min(...products.value.map(product => product.unit_price)));
 </script>
 
 <template>
   <div>
-    <h1 class="text-xl p-4 text-center uppercase mb-4 bg-sky-300 text-sky-800">Nos produits</h1>
+    <h1 class="text-xl p-4 text-center uppercase mb-4 bg-sky-300 text-sky-800">
+      Nos produits<br>
+      Nombre de produits: {{ productsLength }}
+    </h1>
     <div class="container mx-auto flex flex-wrap" v-if="products.length > 0">
-      <div class="bg-white mx-2 my-4 rounded shadow" v-for="product in products" :key="product.id">
+      <div class="mx-2 my-4 rounded shadow" :class="{'bg-green-500': product.unit_price === cheapestPrice}" v-for="product in products" :key="product.id">
         <h3 class="text-xl text-center bg-sky-200 text-sky-500">{{ product.name }}</h3>
         <img :src="'https://picsum.photos/140/100?random='+product.id" class="w-full card-img-top" alt="..."/>
         <div class="py-2 px-4">
