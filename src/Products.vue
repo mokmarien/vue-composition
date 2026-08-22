@@ -1,8 +1,6 @@
-<script>
-import { ref } from 'vue'
+<script setup>
+import { ref , computed} from 'vue'
 
-export default {
-  setup() {
     const products = ref([
       {'id': 1, 'name': 'Produit A', 'unit_price': 10, 'quantity': 5, 'description': '<b>genial</b>'},
       {'id': 2, 'name': 'Produit B', 'unit_price': 140, 'quantity': 4, 'description': '<b style="color: green;">On valide</b>'},
@@ -15,12 +13,8 @@ export default {
       {'id': 9, 'name': 'Produit I', 'unit_price': 40, 'quantity': 5, 'description': '<b>super</b>'},
       {'id': 10, 'name': 'Produit J', 'unit_price': 80, 'quantity': 5, 'description': '<u>génial</u>'},
     ])
+  
 
-    return {
-      products
-    }
-  }
-}
 </script>
 
 <template>
