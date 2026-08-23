@@ -1,6 +1,10 @@
 import './assets/main.css'
 
 import { createApp } from 'vue'
-import App from './Products.vue'
+import Products from './Products.vue'
+import Product from './Product.vue'
 
-createApp(App).mount('#app')
+
+const app = createApp(Products)
+app.component('Product', Product)
+app.mount('#app')
