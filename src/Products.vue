@@ -1,5 +1,6 @@
 <script setup>
 import { ref , computed} from 'vue'
+import ProductsFilter from './ProductsFilter.vue';
 
     const products = ref([
      {'id': 1, 'rating': 1.5, 'name': 'Produit A', 'unit_price': 10, 'quantity': 5, 'description': '<b>genial</b>' },
@@ -26,6 +27,7 @@ import { ref , computed} from 'vue'
       Nos produits <br>
       Nombre de produits: {{ productsLength}}
     </h1>
+    <ProductsFilter />
     <div class="container mx-auto flex flex-wrap" v-if="products.length > 0">
 
       <Product v-for="product in products" :key="product.id" :product="product" :cheapest-price="cheapestPrice" :cheapest-price-color="'bg-blue-500'">
