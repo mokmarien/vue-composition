@@ -7,10 +7,12 @@ const props = defineProps({
     required: true
   }
 })
+
 const inStock = ref(true)
 const orderBy = ref(null)
 
 const orderProductsByName = (is_up) => {
+     let products = [...productsFiltered.value];
   return props.products.sort((a, b) => {
     const nameA = a.name.toUpperCase();
     const nameB = b.name.toUpperCase();
@@ -25,6 +27,7 @@ const orderProductsByName = (is_up) => {
 }
 
 const orderProductsByPrice = (is_up) => {
+     let products = [...productsFiltered.value];
   return props.products.sort((a, b) => {
     const priceA = a.unit_price;
     const priceB = b.unit_price;
@@ -39,7 +42,8 @@ const orderProductsByPrice = (is_up) => {
 }
 
 const productsFiltered = computed(() => {
-  return inStock.value ? props.products.filter(product => product.quantity > 0) : props.products;
+    let products = [...props.products];
+  return inStock.value ? products.filter(product => product.quantity > 0) : props.products;
 })
 
 const productsFilteredAndOrdered = computed(() => {
