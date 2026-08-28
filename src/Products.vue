@@ -27,7 +27,7 @@ import ProductsFilter from './ProductsFilter.vue';
       Nos produits <br>
       Nombre de produits: {{ productsLength}}
     </h1>
-    <ProductsFilter />
+    <ProductsFilter :products="products"></ProductsFilter>
     <div class="container mx-auto flex flex-wrap" v-if="products.length > 0">
 
       <Product v-for="product in products" :key="product.id" :product="product" :cheapest-price="cheapestPrice" :cheapest-price-color="'bg-blue-500'">

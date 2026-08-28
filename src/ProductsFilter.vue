@@ -1,8 +1,67 @@
 <script setup>
 import { ref, computed } from 'vue'
 
+const props = defineProps({
+  products: {
+    type: Array,
+    required: true
+  }
+})
 const inStock = ref(true)
 const orderBy = ref(null)
+
+const orderProductsByName = (is_up) => {
+  return props.products.sort((a, b) => {
+    const nameA = a.name.toUpperCase();
+    const nameB = b.name.toUpperCase();
+    if (nameA < nameB) {
+      return is_up ? -1 : 1;
+    }
+    if (nameA > nameB) {
+      return is_up ? 1 : -1;
+    }
+    return 0;
+  });
+}
+
+const orderProductsByPrice = (is_up) => {
+  return props.products.sort((a, b) => {
+    const priceA = a.unit_price;
+    const priceB = b.unit_price;
+    if (priceA < priceB) {
+      return is_up ? -1 : 1;
+    }
+    if (priceA > priceB) {
+      return is_up ? 1 : -1;
+    }
+    return 0;
+  });
+}
+
+const productsFiltered = computed(() => {
+  return inStock.value ? props.products.filter(product => product.quantity > 0) : props.products;
+})
+
+const productsFilteredAndOrdered = computed(() => {
+  let products = [...productsFiltered.value];
+
+  switch (orderBy.value) {
+    case 'nameUp':
+      products = orderProductsByName(true)
+      break;
+    case 'nameDown':
+      products = orderProductsByName(false)
+      break;
+    case 'priceUp':
+      products = orderProductsByPrice(true)
+      break;
+    case 'priceDown':
+      products = orderProductsByPrice(false)
+      break;
+  }
+
+  return products;
+})
 </script>
 
 <template>
