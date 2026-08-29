@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 
+const emit = defineEmits(['change'])
+
 const props = defineProps({
   products: {
     type: Array,
@@ -11,6 +13,13 @@ const props = defineProps({
 const inStock = ref(true)
 const orderBy = ref(null)
 const search = ref('')
+
+
+
+    const manageChange = () => {
+      emit('change', productsFilteredAndOrdered.value);
+      console.log("Mon message");
+    }
 
 const filterProductsByName = (products) => {
   let searchLower = search.value.toLowerCase();
@@ -87,7 +96,7 @@ const productsFilteredAndOrdered = computed(() => {
          <div class="flex justify-center">
         <div class="text-center">
           <label for="search" class="mr-3 text-center font-bold mb-2 text-sky-900">Recherche par nom</label><br>
-          <input id="search" type="text" v-model="search" class="text-sky-700 p-1"/>
+          <input id="search" type="text" v-model="search" @change="manageChange" class="text-sky-700 p-1"/>
         </div>
       </div>
       <div class="flex flex-wrap justify-evenly items-center">
@@ -95,18 +104,18 @@ const productsFilteredAndOrdered = computed(() => {
           <h4 class="text-center font-bold mb-2 text-sky-900">En stock ?</h4>
           <div class="flex">
             <div class="mx-1">
-              <input type="radio" v-model="inStock" name="in_stock" id="inStockFalse" :value="false"/>
+              <input type="radio" v-model="inStock" name="in_stock" id="inStockFalse" :value="false" @change="manageChange"/>
               <label for="inStockFalse" class="ml-1">Non</label>
             </div>
             <div class="mx-1">
-              <input type="radio" v-model="inStock" name="in_stock" id="inStockTrue" :value="true"/>
-              <label for="inStockFalse" class="ml-1">Oui</label>
+              <input type="radio" v-model="inStock" name="in_stock" id="inStockTrue" :value="true" @change="manageChange"/>
+              <label for="inStockTrue" class="ml-1">Oui</label>
             </div>
           </div>
         </div>
         <div>
           <h4 class="text-center font-bold mb-2 text-sky-900">Ordonné par</h4>
-          <select v-model="orderBy">
+          <select v-model="orderBy"  @change="manageChange">
             <option value="nameDown">Nom décroissant</option>
             <option value="nameUp">Nom croissant</option>
             <option value="priceDown">Prix décroissant</option>
