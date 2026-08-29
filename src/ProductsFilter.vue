@@ -10,7 +10,12 @@ const props = defineProps({
 
 const inStock = ref(true)
 const orderBy = ref(null)
+const search = ref('')
 
+const filterProductsByName = (products) => {
+  let searchLower = search.value.toLowerCase();
+  return products.filter(product => product.name.toLowerCase().includes(searchLower));
+}
 const orderProductsByName = (is_up) => {
      let products = [...productsFiltered.value];
   return props.products.sort((a, b) => {
@@ -43,7 +48,14 @@ const orderProductsByPrice = (is_up) => {
 
 const productsFiltered = computed(() => {
     let products = [...props.products];
-  return inStock.value ? products.filter(product => product.quantity > 0) : props.products;
+  // 1 - On filtre par rapport au stock
+  let result = null;
+  result = inStock.value ? products.filter(product => product.quantity > 0) : props.products;
+
+  // 2 - Et on filtre aussi par le champ de recherche
+  result = filterProductsByName(result);
+
+  return result;
 })
 
 const productsFilteredAndOrdered = computed(() => {
@@ -72,6 +84,12 @@ const productsFilteredAndOrdered = computed(() => {
   <aside>
     <h3 class="font-bold text-sky-500 text-xl text-center uppercase">Filtres</h3>
     <form class="p-4 m-2 bg-sky-300">
+         <div class="flex justify-center">
+        <div class="text-center">
+          <label for="search" class="mr-3 text-center font-bold mb-2 text-sky-900">Recherche par nom</label><br>
+          <input id="search" type="text" v-model="search" class="text-sky-700 p-1"/>
+        </div>
+      </div>
       <div class="flex flex-wrap justify-evenly items-center">
         <div>
           <h4 class="text-center font-bold mb-2 text-sky-900">En stock ?</h4>
