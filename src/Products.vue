@@ -1,5 +1,5 @@
 <script setup>
-import { ref , computed} from 'vue'
+import { ref , computed,onMounted} from 'vue'
 import ProductsFilter from './ProductsFilter.vue';
 
     const products = ref([
@@ -14,7 +14,10 @@ import ProductsFilter from './ProductsFilter.vue';
         {'id': 9, 'rating': 2, 'name': 'Produit I', 'unit_price': 40, 'quantity': 5, 'description': '<b>super</b>'},
         {'id': 10, 'rating': 1, 'name': 'Produit J', 'unit_price': 80, 'quantity': 5, 'description': '<u>génial</u>'}, 
     ]);
-  
+  const productsToShow = ref([]);
+  onMounted(() => {
+    productsToShow.value = products.value;
+  });
     const productsLength = computed(() => products.value.length);
     const cheapestPrice = computed(() => Math.min(...products.value.map(product => product.unit_price)));
 </script>
@@ -27,10 +30,10 @@ import ProductsFilter from './ProductsFilter.vue';
       Nos produits <br>
       Nombre de produits: {{ productsLength}}
     </h1>
-    <ProductsFilter :products="products"></ProductsFilter>
+    <ProductsFilter :products="products" @change="productsToShow = $event"></ProductsFilter>
     <div class="container mx-auto flex flex-wrap" v-if="products.length > 0">
 
-      <Product v-for="product in products" :key="product.id" :product="product" :cheapest-price="cheapestPrice" :cheapest-price-color="'bg-blue-500'">
+      <Product v-for="product in productsToShow" :key="product.id" :product="product" :cheapest-price="cheapestPrice" :cheapest-price-color="'bg-blue-500'">
       </Product>
 
     </div>
