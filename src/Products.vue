@@ -30,7 +30,7 @@ import ProductsFilter from './ProductsFilter.vue';
       Nos produits <br>
       Nombre de produits: {{ productsLength}}
     </h1>
-    <ProductsFilter :products="products" @change="productsToShow = $event"></ProductsFilter>
+    <ProductsFilter v-model:products="productsToShow"></ProductsFilter>
     <div class="container mx-auto flex flex-wrap" v-if="products.length > 0">
 
       <Product v-for="product in productsToShow" :key="product.id" :product="product" :cheapest-price="cheapestPrice" :cheapest-price-color="'bg-blue-500'">

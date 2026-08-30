@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-const emit = defineEmits(['change'])
+const emit = defineEmits(['update:products'])
 
 const props = defineProps({
   products: {
@@ -17,7 +17,7 @@ const search = ref('')
 
 
     const manageChange = () => {
-      emit('change', productsFilteredAndOrdered.value);
+      emit('update:products', productsFilteredAndOrdered.value);
       console.log("Mon message");
     }
 
@@ -130,5 +130,3 @@ const productsFilteredAndOrdered = computed(() => {
 <style scoped>
 
 </style>
-
-
