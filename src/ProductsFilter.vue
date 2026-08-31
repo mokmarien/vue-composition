@@ -1,7 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
-
-const emit = defineEmits(['update:products'])
+import { ref, computed , onMounted} from 'vue'
 
 const props = defineProps({
   products: {
@@ -10,83 +8,68 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['update:products'])
 const inStock = ref(true)
 const orderBy = ref(null)
 const search = ref('')
+const originalProducts = ref([])
 
-
-
-    const manageChange = () => {
-      emit('update:products', productsFilteredAndOrdered.value);
-      console.log("Mon message");
-    }
-
-const filterProductsByName = (products) => {
-  let searchLower = search.value.toLowerCase();
-  return products.filter(product => product.name.toLowerCase().includes(searchLower));
-}
-const orderProductsByName = (is_up) => {
-     let products = [...productsFiltered.value];
-  return props.products.sort((a, b) => {
-    const nameA = a.name.toUpperCase();
-    const nameB = b.name.toUpperCase();
-    if (nameA < nameB) {
-      return is_up ? -1 : 1;
-    }
-    if (nameA > nameB) {
-      return is_up ? 1 : -1;
-    }
-    return 0;
-  });
-}
-
-const orderProductsByPrice = (is_up) => {
-     let products = [...productsFiltered.value];
-  return props.products.sort((a, b) => {
-    const priceA = a.unit_price;
-    const priceB = b.unit_price;
-    if (priceA < priceB) {
-      return is_up ? -1 : 1;
-    }
-    if (priceA > priceB) {
-      return is_up ? 1 : -1;
-    }
-    return 0;
-  });
-}
-
-const productsFiltered = computed(() => {
-    let products = [...props.products];
-  // 1 - On filtre par rapport au stock
-  let result = null;
-  result = inStock.value ? products.filter(product => product.quantity > 0) : props.products;
-
-  // 2 - Et on filtre aussi par le champ de recherche
-  result = filterProductsByName(result);
-
-  return result;
+onMounted(() => {
+  originalProducts.value = [...props.products]
 })
+
+const manageChange = () => {
+      emit('update:products', productsFilteredAndOrdered.value);
+}
 
 const productsFilteredAndOrdered = computed(() => {
-  let products = [...productsFiltered.value];
+  // Copie des produits reçus
+  let products = [...props.products]
 
-  switch (orderBy.value) {
-    case 'nameUp':
-      products = orderProductsByName(true)
-      break;
-    case 'nameDown':
-      products = orderProductsByName(false)
-      break;
-    case 'priceUp':
-      products = orderProductsByPrice(true)
-      break;
-    case 'priceDown':
-      products = orderProductsByPrice(false)
-      break;
+  // Filtre stock
+  if (inStock.value) {
+    products = products.filter(product => product.quantity > 0)
   }
 
-  return products;
+  // Recherche par nom
+  const searchLower = search.value.toLowerCase().trim()
+
+  if (searchLower) {
+    products = products.filter(product =>
+      product.name.toLowerCase().includes(searchLower)
+    )
+  }
+
+  // Tri
+  switch (orderBy.value) {
+    case 'nameUp':
+      products.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      )
+      break
+
+    case 'nameDown':
+      products.sort((a, b) =>
+        b.name.localeCompare(a.name)
+      )
+      break
+
+    case 'priceUp':
+      products.sort((a, b) =>
+        a.unit_price - b.unit_price
+      )
+      break
+
+    case 'priceDown':
+      products.sort((a, b) =>
+        b.unit_price - a.unit_price
+      )
+      break
+  }
+
+  return products
 })
+
 </script>
 
 <template>
