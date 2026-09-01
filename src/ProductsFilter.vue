@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed ,watch} from 'vue'
 
 const emit = defineEmits(['update:products'])
 
@@ -10,8 +10,8 @@ const props = defineProps({
   }
 })
 
-const inStock = ref(true)
-const orderBy = ref(null)
+const inStock = ref(localStorage.getItem('inStock') === 'true' ? true : false)
+const orderBy = ref(localStorage.getItem('orderBy') ? localStorage.getItem('orderBy') : null)
 const search = ref('')
 
 
@@ -87,16 +87,24 @@ const productsFilteredAndOrdered = computed(() => {
 
   return products;
 })
+
+watch(inStock, (newValue) => {
+  localStorage.setItem('inStock', newValue);
+});
+
+watch(orderBy, (newValue) => {
+  localStorage.setItem('orderBy', newValue);
+});
 </script>
 
 <template>
   <aside>
     <h3 class="font-bold text-sky-500 text-xl text-center uppercase">Filtres</h3>
-    <form class="p-4 m-2 bg-sky-300">
+    <form class="p-4 m-2 bg-sky-300" @change="manageChange">
          <div class="flex justify-center">
         <div class="text-center">
           <label for="search" class="mr-3 text-center font-bold mb-2 text-sky-900">Recherche par nom</label><br>
-          <input id="search" type="text" v-model="search" @change="manageChange" class="text-sky-700 p-1"/>
+          <input id="search" type="text" v-model="search"  class="text-sky-700 p-1"/>
         </div>
       </div>
       <div class="flex flex-wrap justify-evenly items-center">
@@ -104,11 +112,11 @@ const productsFilteredAndOrdered = computed(() => {
           <h4 class="text-center font-bold mb-2 text-sky-900">En stock ?</h4>
           <div class="flex">
             <div class="mx-1">
-              <input type="radio" v-model="inStock" name="in_stock" id="inStockFalse" :value="false" @change="manageChange"/>
+              <input type="radio" v-model="inStock" name="in_stock" id="inStockFalse" :value="false" />
               <label for="inStockFalse" class="ml-1">Non</label>
             </div>
             <div class="mx-1">
-              <input type="radio" v-model="inStock" name="in_stock" id="inStockTrue" :value="true" @change="manageChange"/>
+              <input type="radio" v-model="inStock" name="in_stock" id="inStockTrue" :value="true" />
               <label for="inStockTrue" class="ml-1">Oui</label>
             </div>
           </div>
