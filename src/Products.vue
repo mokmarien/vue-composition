@@ -14,12 +14,15 @@ import ProductsFilter from './ProductsFilter.vue';
         {'id': 9, 'rating': 2, 'name': 'Produit I', 'unit_price': 40, 'quantity': 5, 'description': '<b>super</b>'},
         {'id': 10, 'rating': 1, 'name': 'Produit J', 'unit_price': 80, 'quantity': 5, 'description': '<u>génial</u>'}, 
     ]);
+
   const productsToShow = ref([]);
+
   onMounted(() => {
     productsToShow.value = products.value;
   });
-    const productsLength = computed(() => products.value.length);
-    const cheapestPrice = computed(() => Math.min(...products.value.map(product => product.unit_price)));
+
+  const productsLength = computed(() => products.value.length);
+  const cheapestPrice = computed(() => Math.min(...products.value.map(product => product.unit_price)));
 </script>
 
 <template>
