@@ -1,123 +1,138 @@
-<script>
-import { ref, computed , onMounted, watch} from 'vue'
-export default {
-  name: 'ProductsFilter',
-  props: {
-    products: {
-      type: Array,
-      required: true
-    }
-  },
-  emits: ['update:products'],
-  setup(props, { emit }) {
-    const inStock = ref(localStorage.getItem('inStock') === 'true' ? true : false)
-    const orderBy = ref(localStorage.getItem('orderBy') || null)
-    const search = ref('')
-    const originalProducts = ref([])
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue';
 
-    onMounted(() => {
-      originalProducts.value = [...props.products]
-    })
-
-    const manageChange = () => {
-      emit('update:products', productsFilteredAndOrdered.value);
-    }
-
-    const productsFilteredAndOrdered = computed(() => {
-      // Copie des produits reçus
-      let products = [...props.products]
-
-      // Filtre stock
-      if (inStock.value) {
-        products = products.filter(product => product.quantity > 0)
-      }
-
-      // Recherche par nom
-      const searchLower = search.value.toLowerCase().trim()
-
-      if (searchLower) {
-        products = products.filter(product =>
-          product.name.toLowerCase().includes(searchLower)
-        )
-      }
-
-      // Tri
-      switch (orderBy.value) {
-        case 'nameUp':
-          products.sort((a, b) =>
-            a.name.localeCompare(b.name)
-          )
-          break
-
-        case 'nameDown':
-          products.sort((a, b) =>
-            b.name.localeCompare(a.name)
-          )
-          break
-
-        case 'priceUp':
-          products.sort((a, b) =>
-            a.unit_price - b.unit_price
-          )
-          break
-
-        case 'priceDown':
-          products.sort((a, b) =>
-            b.unit_price - a.unit_price
-          )
-          break
-      }
-
-      return products
-    })
-
-    watch(inStock, (newValue) => {
-      localStorage.setItem('inStock', newValue)
-    })
-
-    watch(orderBy, (newValue) => {
-      localStorage.setItem('orderBy', newValue)
-    })
-
-    return {
-      inStock,
-      orderBy,
-      search,
-      manageChange,
-      productsFilteredAndOrdered
-    }
+const props = defineProps({
+  products: {
+    type: Array,
+    required: true
   }
-}
+});
 
+const emit = defineEmits(['update:products']);
+
+const inStock = ref(localStorage.getItem('inStock') || true);
+const orderBy = ref(localStorage.getItem('orderBy') || null);
+const search = ref('');
+const originalProducts = ref([]);
+
+onMounted(() => {
+  originalProducts.value = [...props.products];
+});
+
+const filterProductsByName = (products) => {
+  let searchLower = search.value.toLowerCase();
+  return products.filter(product => product.name.toLowerCase().includes(searchLower));
+};
+
+const orderProductsByName = (is_up) => {
+  let products = [...productsFiltered.value];
+  return products.sort((a, b) => {
+    const nameA = a.name.toUpperCase();
+    const nameB = b.name.toUpperCase();
+    if (nameA < nameB) {
+      return is_up ? -1 : 1;
+    }
+    if (nameA > nameB) {
+      return is_up ? 1 : -1;
+    }
+    return 0;
+  });
+};
+
+const orderProductsByPrice = (is_up) => {
+  let products = [...productsFiltered.value];
+  return products.sort((a, b) => {
+    const priceA = a.unit_price;
+    const priceB = b.unit_price;
+    if (priceA < priceB) {
+      return is_up ? -1 : 1;
+    }
+    if (priceA > priceB) {
+      return is_up ? 1 : -1;
+    }
+    return 0;
+  });
+};
+
+const manageChange = () => {
+  emit('update:products', productsFilteredAndOrdered.value);
+};
+
+const productsFiltered = computed(() => {
+  let products = [...originalProducts.value];
+  // 1 - On filtre par rapport au stock
+  let result = null;
+  result = inStock.value ? products.filter(product => product.quantity > 0) : originalProducts.value;
+
+  // 2 - Et on filtre aussi par le champ de recherche
+  result = filterProductsByName(result);
+
+  return result;
+});
+
+const productsFilteredAndOrdered = computed(() => {
+  let products = [...productsFiltered.value];
+
+  switch (orderBy.value) {
+    case 'nameUp':
+      products = orderProductsByName(true)
+      break;
+    case 'nameDown':
+      products = orderProductsByName(false)
+      break;
+    case 'priceUp':
+      products = orderProductsByPrice(true)
+      break;
+    case 'priceDown':
+      products = orderProductsByPrice(false)
+      break;
+  }
+
+  return products;
+});
+
+watch(orderBy, (newValue) => {
+  localStorage.setItem('orderBy', newValue);
+  manageChange();
+});
+
+watch(inStock, (newValue) => {
+  localStorage.setItem('inStock', newValue);
+  manageChange();
+});
+
+watch(search, () => {
+  manageChange();
+});
 </script>
 
 <template>
   <aside>
     <h3 class="font-bold text-sky-500 text-xl text-center uppercase">Filtres</h3>
-    <form class="p-4 m-2 bg-sky-300" @change="manageChange" >
-         <div class="flex justify-center">
+    <form class="p-4 m-2 bg-sky-300" @change="manageChange">
+      <div class="flex justify-center">
         <div class="text-center">
           <label for="search" class="mr-3 text-center font-bold mb-2 text-sky-900">Recherche par nom</label><br>
-          <input id="search" type="text" v-model="search"  class="text-sky-700 p-1"/>
+          <input id="search" type="text" v-model="search" class="text-sky-700 p-1"/>
         </div>
       </div>
-      <div class="flex flex-wrap justify-evenly items-center">
+      <div class="flex flex-wrap justify-evenly items-center my-3">
         <div>
           <h4 class="text-center font-bold mb-2 text-sky-900">En stock ?</h4>
           <div class="flex">
             <div class="mx-1">
-              <input type="radio" v-model="inStock" name="in_stock" id="inStockFalse" :value="false" />
+              <input type="radio" v-model="inStock" name="in_stock" id="inStockFalse" :value="false"/>
               <label for="inStockFalse" class="ml-1">Non</label>
             </div>
             <div class="mx-1">
-              <input type="radio" v-model="inStock" name="in_stock" id="inStockTrue" :value="true" />
-              <label for="inStockTrue" class="ml-1">Oui</label>
+              <input type="radio" v-model="inStock" name="in_stock" id="inStockTrue" :value="true"/>
+              <label for="inStockFalse" class="ml-1">Oui</label>
             </div>
           </div>
         </div>
         <div>
           <h4 class="text-center font-bold mb-2 text-sky-900">Ordonné par</h4>
-          <select v-model="orderBy" >
+          <select v-model="orderBy" class="p-1">
             <option value="nameDown">Nom décroissant</option>
             <option value="nameUp">Nom croissant</option>
             <option value="priceDown">Prix décroissant</option>
