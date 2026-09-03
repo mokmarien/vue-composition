@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 const props = defineProps({
   products: {
@@ -15,9 +15,7 @@ const orderBy = ref(localStorage.getItem('orderBy') || null);
 const search = ref('');
 const originalProducts = ref([]);
 
-onMounted(() => {
-  originalProducts.value = [...props.products];
-});
+originalProducts.value = [...props.products];
 
 const filterProductsByName = (products) => {
   let searchLower = search.value.toLowerCase();
@@ -56,6 +54,13 @@ const orderProductsByPrice = (is_up) => {
 
 const manageChange = () => {
   emit('update:products', productsFilteredAndOrdered.value);
+};
+
+const reset = () => {
+  inStock.value = true;
+  orderBy.value = null;
+  search.value = '';
+  manageChange();
 };
 
 const productsFiltered = computed(() => {
@@ -103,6 +108,10 @@ watch(inStock, (newValue) => {
 
 watch(search, () => {
   manageChange();
+});
+
+defineExpose({
+  reset
 });
 </script>
 

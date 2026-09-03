@@ -5,6 +5,7 @@ import Rating from "@/Rating.vue";
 
 const products = ref([]);
 const productsToShow = ref([]);
+const productFilter = ref(null);
 
 const productsLength = computed(() => {
   return products.value.length;
@@ -20,7 +21,6 @@ onMounted(() => {
       .then((data) => {
         products.value = data;
         productsToShow.value = data;
-
       })
       .catch((error) => console.log('error fetch products dans products.vue', error));
 });
@@ -33,13 +33,16 @@ onMounted(() => {
       Nombre de produits: {{ productsLength }}
     </h1>
 
-    <ProductsFilter v-if="productsLength > 0" v-model:products="productsToShow"></ProductsFilter>
+    <ProductsFilter ref="productFilter" v-if="productsLength > 0" v-model:products="productsToShow"></ProductsFilter>
 
     <div class="container mx-auto flex flex-wrap" v-if="products.length > 0">
       <Product v-for="product in productsToShow" :key="product.id" :data="product" :cheapest-price="cheapestPrice"></Product>
     </div>
     <div v-else>
       <p>Il n'y a pas encore de produits !</p>
+    </div>
+    <div>
+      <button @click="productFilter.reset()" class="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm">Reset</button>
     </div>
   </div>
 </template>
