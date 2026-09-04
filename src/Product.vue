@@ -28,7 +28,7 @@ defineProps({
       </p>
       <div class="text-sm" v-html="data.description">
       </div>
-      <Rating :value="data.rating"></Rating>
+      <Rating :rating="data.rating"></Rating>
     </div>
   </div>
 </template>

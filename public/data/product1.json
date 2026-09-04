@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "rating": 1.5,
+  "name": "Produit A",
+  "unit_price": 10,
+  "quantity": 0,
+  "description": "<b>Lorem ipsum dolor sit amet</b>, consectetur adipiscing elit. Cras malesuada massa eros, vitae aliquet odio cursus vel. Sed vitae imperdiet tortor. ",
+  "published_at": "2024 05 31"
+}

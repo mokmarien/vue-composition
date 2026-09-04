@@ -1,0 +1,9 @@
+{
+  "id": 3,
+  "rating": 3,
+  "name": "Produit C",
+  "unit_price": 15,
+  "quantity": 5,
+  "description": null,
+  "published_at": "2024 05 25"
+}

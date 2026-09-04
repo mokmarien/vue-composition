@@ -1,0 +1,10 @@
+{
+  "id": 7,
+  "rating": 3,
+  "name": "Produit G",
+  "unit_price": 105,
+  "quantity": 5,
+  "description": "<b>Lorem ipsum dolor sit amet</b>, consectetur adipiscing elit. Cras malesuada massa eros, vitae aliquet odio cursus vel. Sed vitae imperdiet tortor. ",
+  "published_at": "2024 09 45"
+
+}

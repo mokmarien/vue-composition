@@ -19,6 +19,8 @@ const numberOfPlainItem = computed(() => {
 })
 
 const numberOfEmptyItem = computed(() => {
+  console.log('props.maxRating', props.maxRating)
+   console.log('props.rating', props.rating)
   return props.maxRating - Math.floor(props.rating);
 })
 

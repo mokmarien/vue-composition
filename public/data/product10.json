@@ -1,0 +1,9 @@
+{
+  "id": 10,
+  "rating": 1,
+  "name": "Produit J",
+  "unit_price": 80,
+  "quantity": 5,
+  "description": "<b>Lorem ipsum dolor sit amet</b>, consectetur adipiscing elit. Cras malesuada massa eros, vitae aliquet odio cursus vel. Sed vitae imperdiet tortor. ",
+  "published_at": "2021 01 10"
+}
