@@ -39,8 +39,10 @@ onMounted(() => {
 
     <div class="container mx-auto">
       <div class="flex flex-wrap" v-if="products.length > 0">
+         <TransitionGroup name="list" > 
         <Product v-for="product in productsToShow" :key="product.id" :data="product" :cheapest-price="cheapestPrice"
                  @click="selectedProductId = product.id"></Product>
+        </TransitionGroup>
 
         <template v-for="product in products">
           <KeepAlive>
@@ -63,5 +65,14 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
+.list-move, .list-enter-active, .list-leave-active {
+  transition: all 0.5s;
+}
+.list-enter-from, .list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.list-leave-active {
+  position: absolute;
+}
 </style>

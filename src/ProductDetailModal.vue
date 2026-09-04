@@ -39,7 +39,7 @@ export default {
 </script>
 
 <template>
-
+ <Transition name="modal">
   <div v-if="product" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
     <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full">
       <div class="flex justify-between items-center border-b pb-3 mb-3">
@@ -56,8 +56,14 @@ export default {
       </div>
     </div>
   </div>
+  </Transition>
 </template>
 
 <style scoped>
-
+.modal-enter-active, .modal-leave-active {
+  transition: opacity 0.5s;
+}
+.modal-enter-from, .modal-leave-to {
+  opacity: 0;
+}
 </style>
