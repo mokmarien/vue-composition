@@ -1,8 +1,10 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted ,provide} from 'vue';
 import ProductsFilter from "@/ProductsFilter.vue";
 import Rating from "@/Rating.vue";
 import ProductDetailModal from "@/ProductDetailModal.vue";
+
+provide('max', 8);
 
 const products = ref([]);
 const productsToShow = ref([]);

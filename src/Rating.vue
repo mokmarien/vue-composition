@@ -1,17 +1,15 @@
 <script setup>
-import { computed } from 'vue'
+import { computed ,inject} from 'vue'
 
+
+
+const maxRating = inject('max', '5');
 const props = defineProps({
   rating: {
     type: Number,
     required: true
   },
-  maxRating: {
-    validator(rating, props) {
-      return rating >= props.rating;
-    },
-    default: 5
-  }
+  
 })
 
 const numberOfPlainItem = computed(() => {
@@ -19,9 +17,9 @@ const numberOfPlainItem = computed(() => {
 })
 
 const numberOfEmptyItem = computed(() => {
-  console.log('props.maxRating', props.maxRating)
+  console.log('props.maxRating', maxRating)
    console.log('props.rating', props.rating)
-  return props.maxRating - Math.floor(props.rating);
+  return maxRating - Math.floor(props.rating);
 })
 
 const numberOfHalfItem = computed(() => {
