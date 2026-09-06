@@ -45,10 +45,12 @@ onMounted(() => {
         </TransitionGroup>
 
         <template v-for="product in products">
+           <Teleport to="#modals">  
           <KeepAlive>
             <ProductDetailModal v-if="selectedProductId === product.id" :key="product.id" :id="product.id"
                                 @close="selectedProductId = null"></ProductDetailModal>
           </KeepAlive>
+          </Teleport>
         </template>
       </div>
       <div v-else>
